@@ -343,12 +343,12 @@ std::string subconverter(RESPONSE_CALLBACK_ARGS)
     std::string argIncludeRemark = urlDecode(getUrlArg(argument, "include")), argExcludeRemark = urlDecode(getUrlArg(argument, "exclude"));
     std::string argCustomGroups = urlSafeBase64Decode(getUrlArg(argument, "groups")), argCustomRulesets = urlSafeBase64Decode(getUrlArg(argument, "ruleset")), argExternalConfig = urlDecode(getUrlArg(argument, "config"));
     std::string argDeviceID = getUrlArg(argument, "dev_id"), argFilename = urlDecode(getUrlArg(argument, "filename")), argUpdateInterval = getUrlArg(argument, "interval"), argUpdateStrict = getUrlArg(argument, "strict");
-    std::string argRenames = urlDecode(getUrlArg(argument, "rename")), argFilterScript = urlDecode(getUrlArg(argument, "filter_script"));
+    std::string argRenames = urlDecode(getUrlArg(argument, "rename")), argFilterScript = urlDecode(getUrlArg(argument, "filter_script")), argSortScript = urlDecode(getUrlArg(argument, "sort_script"));
 
     /// switches with default value
     tribool argUpload = getUrlArg(argument, "upload"), argEmoji = getUrlArg(argument, "emoji"), argAddEmoji = getUrlArg(argument, "add_emoji"), argRemoveEmoji = getUrlArg(argument, "remove_emoji");
     tribool argAppendType = getUrlArg(argument, "append_type"), argTFO = getUrlArg(argument, "tfo"), argUDP = getUrlArg(argument, "udp"), argGenNodeList = getUrlArg(argument, "list");
-    tribool argSort = getUrlArg(argument, "sort"), argUseSortScript = getUrlArg(argument, "sort_script");
+    tribool argSort = getUrlArg(argument, "sort");
     tribool argGenClashScript = getUrlArg(argument, "script"), argEnableInsert = getUrlArg(argument, "insert");
     tribool argSkipCertVerify = getUrlArg(argument, "scv"), argFilterDeprecated = getUrlArg(argument, "fdn"), argExpandRulesets = getUrlArg(argument, "expand"), argAppendUserinfo = getUrlArg(argument, "append_info");
     tribool argPrependInsert = getUrlArg(argument, "prepend"), argGenClassicalRuleProvider = getUrlArg(argument, "classic"), argTLS13 = getUrlArg(argument, "tls13");
@@ -421,9 +421,8 @@ std::string subconverter(RESPONSE_CALLBACK_ARGS)
     ext.tls13.define(argTLS13).define(global.TLS13Flag);
 
     ext.sort_flag = argSort.get(global.enableSort);
-    argUseSortScript.define(global.sortScript.size() != 0);
-    if(ext.sort_flag && argUseSortScript)
-        ext.sort_script = global.sortScript;
+    if(ext.sort_flag)
+        ext.sort_script = argSortScript.size() ? argSortScript : global.sortScript;
     ext.filter_deprecated = argFilterDeprecated.get(global.filterDeprecated);
     ext.clash_new_field_name = argClashNewField.get(global.clashUseNewField);
     ext.clash_script = argGenClashScript.get();
